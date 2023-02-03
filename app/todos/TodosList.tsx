@@ -5,11 +5,10 @@ import { Todo } from '../../typings';
 const fetchTodos = async() => {
     const res = await fetch('https://jsonplaceholder.typicode.com/todos');
     const data: Todo[] = await res.json();
-    console.log('fetchTodos');
     return data;
 };
 
-async function TodosList() {
+async function TodosList() : Promise<JSX.Element>{
     const todos = await fetchTodos();
 
     return (
