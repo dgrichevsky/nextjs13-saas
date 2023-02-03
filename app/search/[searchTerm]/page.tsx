@@ -34,6 +34,8 @@ async function SearchResults({ params: { searchTerm } }: PageProps) {
 					return <li>
 						<p> {result.title}</p>
 						<p> {result.thumbnail}</p>
+						<p> {result.snippet}</p>
+
 
 					</li>;
 				}
