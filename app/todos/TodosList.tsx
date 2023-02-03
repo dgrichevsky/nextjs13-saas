@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { Todo } from '../../typings';
 
 const fetchTodos = async() => {
-    const res = await fetch('https://jsonplaceholder.typicode.com/todos');
+    const res = await fetch('https://jsonplaceholder.typicode.com/todos',
+        { next: { revalidate: 60 } }
+    );
     const data: Todo[] = await res.json();
     return data;
 };
@@ -21,6 +23,16 @@ async function TodosList() : Promise<JSX.Element>{
             )}
         </>
     );
+}
+export async function generateStaticParams() {
+    const todos = await fetchTodos();
+    // rate limited
+    const trimmedTodos = todos.slice(0, 10);
+    return trimmedTodos.map((todo) => {
+        return {
+            todoId: todo.id.toString()
+        };
+    });
 }
 
 export default TodosList;
