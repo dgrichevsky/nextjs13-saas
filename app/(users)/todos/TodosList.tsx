@@ -1,8 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import { Todo } from '../../typings';
+import { Todo } from '../../../typings';
 
-const fetchTodos = async() => {
+const fetchTodos = async () => {
+    // add timeoujt to simulate slow network
+    const timeout = Math.floor(Math.random() * 5 + 1) * 1000;
+    await new Promise((resolve) => {
+        return setTimeout(resolve, timeout);
+    });
     const res = await fetch('https://jsonplaceholder.typicode.com/todos',
         { next: { revalidate: 60 } }
     );
@@ -10,7 +15,7 @@ const fetchTodos = async() => {
     return data;
 };
 
-async function TodosList() : Promise<JSX.Element>{
+async function TodosList(): Promise<JSX.Element> {
     const todos = await fetchTodos();
 
     return (
@@ -23,16 +28,6 @@ async function TodosList() : Promise<JSX.Element>{
             )}
         </>
     );
-}
-export async function generateStaticParams() {
-    const todos = await fetchTodos();
-    // rate limited
-    const trimmedTodos = todos.slice(0, 10);
-    return trimmedTodos.map((todo) => {
-        return {
-            todoId: todo.id.toString()
-        };
-    });
 }
 
 export default TodosList;
